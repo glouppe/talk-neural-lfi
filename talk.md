@@ -249,6 +249,7 @@ as an intermediate step. – Vladimir Vapnik]]
 ---
 
 class: middle
+count: false
 
 # Frequentist inference
 
@@ -274,10 +275,9 @@ class: middle
 
 .center.width-90[![](./figures/lfi-summary-stats.png)]
 
-Define a projection function $s:\mathcal{X} \to \mathbb{R}$ mapping observables $x$ to a summary statistics $x'=s(x)$.
+Define a projection function $s:\mathcal{X} \to \mathbb{R}$ mapping observables $x$ to a summary statistic $x'=s(x)$.
 
-Then, **approximate** the likelihood $p(x|\theta)$ as
-$$p(x|\theta) \approx \hat{p}(x|\theta) = p(x'|\theta).$$
+Then, **approximate** the likelihood $p(x|\theta)$ with the surrogate $\hat{p}(x|\theta) = p(x'|\theta)$.
 
 From this it comes
 $$\frac{p(x|\theta\_0)}{p(x|\theta\_1)} \approx \frac{\hat{p}(x|\theta\_0)}{\hat{p}(x|\theta\_1)} = \hat{r}(x|\theta\_0,\theta\_1).$$
@@ -288,11 +288,11 @@ class: middle
 
 ## Wilks theorem
 
-Consider the test statistics $$q(\theta) = -2 \sum\_x \log \frac{p(x|\theta)}{p(x|\hat{\theta})} = -2 \sum\_x \log r(x|\theta,\hat{\theta})$$ for a fixed number $N$ of observations $\\{x\\}$ and where $\hat{\theta}$ is the maximum likelihood estimator.
+Consider the test statistic $$q(\theta) = -2 \sum\_x \log \frac{p(x|\theta)}{p(x|\hat{\theta})} = -2 \sum\_x \log r(x|\theta,\hat{\theta})$$ for a fixed number $N$ of observations $\\{x\\}$ and where $\hat{\theta}$ is the maximum likelihood estimator.
 
 When $N \to \infty$, $q(\theta) \sim \chi\_2$. Therefore, an observed value $q\_\text{obs}(\theta)$ translates directly to a p-value that measures the confidence with which $\theta$ can be excluded:
 
-$$p\_\theta \equiv \int\_{q\_\text{obs}(\theta)}^\infty \text{d}q\, p(q|\theta) = 1 - F\_{\chi\_2}(q\_\text{obs}(\theta)|k).$$
+$$p\_\theta \equiv \int\_{q\_\text{obs}(\theta)}^\infty \text{d}q\, p(q|\theta) = 1 - F\_{\chi\_2}(q\_\text{obs}(\theta)).$$
 
 ---
 
@@ -335,11 +335,9 @@ L\_{XE}[\hat{s}] = -\mathbb{E}\_{p(x|\theta)\pi(\theta)} [&1(\theta=\theta\_0) \
 &1(\theta=\theta\_1) \log (1-\hat{s}(x))]
 \end{aligned}
 $$
-
-.center.width-90[![](figures/inference-1.png)]
+.center.width-40[![](figures/s_x.png)]
 
 .footnote[Cranmer, Pavez and Louppe, 2015 [[arXiv:1506.02169](https://arxiv.org/abs/1506.02169)].]
-
 
 ---
 
@@ -351,6 +349,23 @@ $$\hat{s}(x) \approx s^\*(x) = \frac{p(x|\theta\_1)}{p(x|\theta\_0)+p(x|\theta\_
 Therefore, $$r(x|\theta\_0,\theta\_1) \approx \hat{r}(x|\theta\_0,\theta\_1)=\frac{1-\hat{s}(x)}{\hat{s}(x)}$$
 
 That is, **supervised classification** is equivalent to *likelihood ratio estimation*.
+
+.footnote[Cranmer, Pavez and Louppe, 2015 [[arXiv:1506.02169](https://arxiv.org/abs/1506.02169)].]
+
+---
+
+class: middle
+
+.center.width-90[![](figures/inference-1.png)]
+
+To avoid retraining a classifier $\hat{s}$ for every $(\theta\_0, \theta\_1)$ pair, fix $\theta\_1$ to $\theta\_\text{ref}$ and train a single **parameterized** classifier $\hat{s}(x|\theta\_0,\theta\_\text{ref})$ where $\theta\_0$ is also given as input.
+
+Therefore, we have
+$$\hat{r}(x|\theta\_0,\theta\_\text{ref}) = \frac{1 - \hat{s}(x|\theta,\theta\_\text{ref})}{\hat{s}(x|\theta\_0,\theta\_\text{ref})}$$
+such that for any $(\theta\_0, \theta\_1)$,
+$$r(x|\theta\_0,\theta\_1) \approx \frac{\hat{r}(x|\theta\_0,\theta\_\text{ref})}{\hat{r}(x|\theta\_1,\theta\_\text{ref})}.$$
+
+.footnote[Cranmer, Pavez and Louppe, 2015 [[arXiv:1506.02169](https://arxiv.org/abs/1506.02169)].]
 
 ---
 
@@ -388,7 +403,7 @@ class: middle
 .grid[
 .kol-2-3[
 
-- Computer simulation typically evolve along a tree-like structure of successive random branchings.
+- Computer simulations typically evolve along a tree-like structure of successive random branchings.
 - The probabilities of each branching $p(z\\\_i|z\\\_{i-1},\theta)$ are often clearly defined in the code:
 ```python
 if random() > 0.1+2.5+model\_parameter:
@@ -501,6 +516,7 @@ $$\begin{aligned}
 t^\*(x) &= \frac{1}{p(x|\theta\_0)} \int p(x,z|\theta\_0) (\nabla\_\theta \log p(x,z|\theta) \big|\_{\theta\_0})  dz \\\\
 &= \frac{1}{p(x|\theta\_0)} \int p(x,z|\theta\_0) \frac{\nabla\_\theta p(x,z|\theta) \big|\_{\theta\_0}}{p(x,z|\theta\_0)} dz \\\\
 &= \frac{\nabla\_\theta p(x|\theta)\big|\_{\theta\_0}}{p(x|\theta\_0)} \\\\
+&= \nabla\_\theta \log p(x|\theta)\big|\_{\theta\_0}\\\\
 &= t(x|\theta\_0).
 \end{aligned}$$
 
@@ -619,6 +635,7 @@ Between the LHC stuff and the lensing, we’re using the same methods across 37 
 ---
 
 class: middle
+count: false
 
 # Bayesian inference
 
@@ -693,7 +710,7 @@ class: middle
 
 ---
 
-# MCMC sampling
+# MCMC posterior sampling
 
 <br>
 .center.width-100[![](figures/animation3.gif)]
@@ -735,16 +752,22 @@ class: middle
 
 # Probabilistic programming
 
-.center.width-100[![](figures/pp-inputoutput.png)]
+.center.width-80[![](figures/sherpa-250.png)]
 
-- A probabilistic program defines a joint distribution of *unobserved* and *observed* variables $p(x,y)$.
-- Probabilistic programming extends ordinary programming with two added constructs:
-    - Sampling from distributions
-    - Conditioning random variables by specifying observed values
-- **Inference engines** give us distributions over unobserved variables, given observed variables (data)
+A probabilistic program defines a joint distribution of *unobserved* $x$ and *observed* $y$ variables $p(x,y)$.
+
+Probabilistic programming extends ordinary programming with two added constructs:
+- Sampling from distributions
+- Conditioning random variables by specifying observed values
+
+---
+
+class: middle
+
+**Inference engines** give us distributions over unobserved variables, given observed variables (data)
 $$p(x|y) = \frac{p(y|x)p(x)}{p(y)}$$
 
-
+.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
 
 ---
 
@@ -769,7 +792,7 @@ class: middle, red-slide
 
 A stochastic simulator implicitly defines a probability distribution by sampling pseudo-random numbers.
 
-.bold[Scientific simulators are probabilistic programs!].
+.bold[Scientific simulators are probabilistic programs!]
 
 ---
 
@@ -805,7 +828,7 @@ class: middle
 
 .grid[
 .kol-2-3[
-## ③ Taking control of Sherpa
+## ③ Taking control of Sherpa (particle physics simulator)
 - $\tau$ decay in Sherpa, 38 decay channels, coupled with an approximate calorimeter simulation in C++.
 - Observations are 3D calorimeter depositions.
 - Latent variables (Monte Carlo truth) of interest: decay channel, px, py, pz momenta, final state momenta and IDs.
@@ -847,71 +870,6 @@ class: middle
 
 ## Interpretability
 
-Latent probabilistic structure of the 10 most frequent trace types:
-
-.width-100[![](figures/sherpa-10.png)]
-
-.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
-
----
-
-class: middle
-count: false
-
-## Interpretability
-
-Latent probabilistic structure of the 10 most frequent trace types:
-
-.width-100[![](figures/sherpa-10-addresses.png)]
-
-.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
-
----
-
-class: middle
-count: false
-
-## Interpretability
-
-Latent probabilistic structure of the 10 most frequent trace types:
-
-.width-100[![](figures/sherpa-10-interp.png)]
-
-.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
-
----
-
-class: middle
-count: false
-
-## Interpretability
-
-Latent probabilistic structure of the 25 most frequent trace types:
-
-.width-100[![](figures/sherpa-25.png)]
-
-.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
-
----
-
-class: middle
-count: false
-
-## Interpretability
-
-Latent probabilistic structure of the 100 most frequent trace types:
-
-.width-100[![](figures/sherpa-100.png)]
-
-.footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
-
----
-
-class: middle
-count: false
-
-## Interpretability
-
 Latent probabilistic structure of the 250 most frequent trace types:
 
 .width-100[![](figures/sherpa-250.png)]
@@ -921,9 +879,6 @@ Latent probabilistic structure of the 250 most frequent trace types:
 ---
 
 class: middle
-count: false
-
-## Interpretability
 
 .width-100[![](figures/sherpa-posterior.png)]
 
@@ -932,6 +887,7 @@ count: false
 ---
 
 class: middle
+count: false
 
 # Summary
 
@@ -940,10 +896,13 @@ class: middle
 # Summary
 
 - Much of modern science is based on "likelihood-free" simulations.
-- The likelihood-ratio is central to many statistical inference procedures.
+- The likelihood-ratio is central to many statistical inference procedures, regardless of your religion.
 - Supervised learning enables likelihood-ratio estimation.
 - Better likelihood-ratio estimates can be achieved by mining simulators.
 - Probabilistic programming enables posterior inference in scientific simulators.
+
+<br><br>
+.center.width-90[![](./figures/lfi-chain.png)]
 
 ---
 
