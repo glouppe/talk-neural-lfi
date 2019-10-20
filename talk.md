@@ -327,12 +327,12 @@ class: middle
 # Cᴀʀʟ
 
 Supervised learning provides a way to **automatically** construct $s$:
-- Let us consider a neural network classifier $\hat{s}$ trained to distinguish $x \sim p(x|\theta\_0)$  from $x \sim p(x|\theta\_1)$.
-- $\hat{s}$ is trained by minimizing the cross-entropy loss
+- Let us consider a neural network classifier $\hat{s}$ tasked to distinguish $x \sim p(x|\theta\_0)$  from $x \sim p(x|\theta\_1)$.
+- Train $\hat{s}$ by minimizing the cross-entropy loss
 $$
 \begin{aligned}
 L\_{XE}[\hat{s}] = -\mathbb{E}\_{p(x|\theta)\pi(\theta)} [&1(\theta=\theta\_0) \log \hat{s}(x) + \\\\
-&1(\theta=\theta\_1) \log (1-\hat{s}(x))]
+&1(\theta=\theta\_1) \log (1-\hat{s}(x))].
 \end{aligned}
 $$
 .center.width-40[![](figures/s_x.png)]
@@ -439,6 +439,10 @@ Can we use them to approximate $r(x|\theta\_0,\theta\_1)$?
 .kol-1-2[.width-100[![](figures/r_xz.png)]]
 ]
 
+???
+
+The relation between $r(x, z|\theta\_0, \theta\_1)$ and $r(x|\theta\_0, \theta\_1)$ is not trivial— the integral of the ratio is not the ratio of the integrals!
+
 ---
 
 class: middle
@@ -503,7 +507,7 @@ which indicates how much more or less likely $x,z$ would be if one changed $\the
 
 ???
 
-Go fast!!
+The integral of the log is not the log of the integral!.
 
 ---
 
@@ -595,21 +599,24 @@ class: middle
 
 ---
 
-# Examples
-
 .grid[
 .kol-3-5[
+# Examples
+
 ## ① Hunting new physics at particle colliders
 
-Goal: constrain two EFT parameters
-- new inference methods
-- baseline: 2d histogram analysis of jet momenta and angular correlations
+The goal is to constrain two EFT parameters and compare against traditional histogram analysis.
 ]
-.kol-2-5.width-90.center[![](figures/ex1-1.png)]
+.kol-2-5.width-100.center[![](figures/ex1-1.png)]
 ]
-.center.width-90[![](figures/ex1-2.png)]
+
+.center.width-100[![](figures/ex1-2.png)]
 
 .footnote[Brehmer, Cranmer, Louppe, and Pavez, 2018a [[arXiv:1805.00020](https://arxiv.org/abs/1805.00020)], 2018b [[arXiv:1805.00013](https://arxiv.org/abs/1805.00013)]; Brehmer, Louppe, Pavez and Cranmer, 2018 [[arXiv:1805.12244](https://arxiv.org/abs/1805.12244)].]
+
+???
+
+baseline: 2d histogram analysis of jet momenta and angular correlations
 
 ---
 
@@ -690,7 +697,7 @@ where $r(x|\theta) = \frac{p(x|\theta)}{p(x)}$ is the likelihood-to-evidence rat
 count: false
 
 As before, the likelihood-to-evidence ratio can be approximated e.g. from a neural network classifier trained to distinguish  $x \sim p(x|\theta)$  from $x \sim p(x)$,
-hence enabling direct and **amortized**  posterior evaluation.
+hence enabling *direct* and **amortized**  posterior evaluation.
 .grid.center[
 .kol-1-2[.width-70[![](figures/aalr-training.png)]]
 .kol-1-2[<br>.width-100[![](figures/aalr-net.png)] ]
@@ -805,6 +812,10 @@ class: middle
 Let a neural network take full control of the internals of the simulation program by hijacking all calls to the random number generator.
 
 .footnote[Le et al, 2016 [[arXiv:1610.09900](https://arxiv.org/abs/1610.09900)]; Baydin et al, 2018 [[arXiv:1807.07706](https://arxiv.org/abs/1807.07706)]; Baydin et al, 2019 [[arXiv:1907.03382](https://arxiv.org/abs/1907.03382)].]
+
+???
+
+Somewhat similar to ABC except we also make inference on $z$ and learn to sample efficiently.
 
 ---
 
