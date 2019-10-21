@@ -298,7 +298,13 @@ $$p\_\theta \equiv \int\_{q\_\text{obs}(\theta)}^\infty \text{d}q\, p(q|\theta) 
 
 class: middle, center
 
-.width-70[![](figures/higgs4l.gif)]
+.grid[
+.kol-2-3[.width-100[![](figures/higgs4l.gif)]]
+.kol-1-3[<br>.width-100[![](figures/higgs-discovery.jpg)]
+
+.width-100[![](figures/nobel.jpg)]]
+]
+
 
 Discovery of the Higgs boson at 5-$\sigma$ (p-value cutoff at $3\times 10^{-7}$)
 
